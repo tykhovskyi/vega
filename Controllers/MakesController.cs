@@ -13,8 +13,8 @@ namespace vega.Controllers
 {
     public class MakesController : Controller
     {
-        private VegaDbContext context;
-        private IMapper mapper;
+        private readonly VegaDbContext context;
+        private readonly IMapper mapper;
 
         public MakesController(VegaDbContext context, IMapper mapper)
         {
