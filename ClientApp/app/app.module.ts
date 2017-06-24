@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
+import { MakeService } from './services/make.service';
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
@@ -32,6 +33,9 @@ import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.com
       { path: 'fetch-data', component: FetchDataComponent },
       { path: '**', redirectTo: 'home' }
     ])
+  ],
+  providers: [
+    MakeService
   ]
 })
 export class AppModuleShared {
