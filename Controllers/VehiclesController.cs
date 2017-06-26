@@ -45,7 +45,8 @@ namespace vega.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var vehicle = await context.Vehicles.Include(v => v.Features)
+            var vehicle = await context.Vehicles
+                .Include(v => v.Features)
                 .SingleOrDefaultAsync(v => v.Id == id);
             
             if (vehicle == null)
@@ -75,10 +76,20 @@ namespace vega.Controllers
             return Ok(id);
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<Vehicle>> GetMakes()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetVehicle(int id)
         {
-            return await context.Vehicles.ToListAsync();
+            var vehicle = await context.Vehicles
+                .Include(v => v.Features)
+                .FirstOrDefaultAsync(v => v.Id == id);
+
+            if (vehicle == null)
+                return NotFound();
+
+            var vehicleResource = mapper
+                .Map<Vehicle, VehicleResource>(vehicle);
+            
+            return Ok(vehicleResource);
         }
     }
 }
