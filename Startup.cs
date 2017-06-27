@@ -33,6 +33,8 @@ namespace WebApplicationBasic
         {
             // Add framework services.
             services.AddMvc();
+
+            services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
             services.AddAutoMapper();
         }
