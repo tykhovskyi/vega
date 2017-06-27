@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using vega.Controllers.Resources;
-using vega.Models;
+using vega.Core.Models;
 using vega.Persistence;
 
 namespace vega.Controllers
