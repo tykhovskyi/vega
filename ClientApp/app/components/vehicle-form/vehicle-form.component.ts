@@ -53,26 +53,18 @@ export class VehicleFormComponent implements OnInit {
       this.makes = data[0];
       this.features = data[1];
 
-      if (this.vehicle.id)
+      if (this.vehicle.id) {
         this.setVehicle(data[2]);
+        this.populateModels();
+      }
     }, err => {
       if (err.status == 404)
         this.router.navigate(['/home']);
     });
   }
 
-  private setVehicle(v: Vehicle) {
-    this.vehicle.id = v.id;
-    this.vehicle.makeId = v.make.id;
-    this.vehicle.modelId = v.model.id;
-    this.vehicle.isRegistered = v.isRegistered;
-    this.vehicle.contact = v.contact;
-    this.vehicle.features = _.pluck(v.features, 'id');
-  }
-
   onMakeChange() {
-    var selectedMake = this.makes.find(m => m.id == this.vehicle.makeId);
-    this.models = selectedMake ? selectedMake.models : [];
+    this.populateModels();
     delete this.vehicle.modelId;
   }
   
@@ -88,5 +80,19 @@ export class VehicleFormComponent implements OnInit {
   submit() {
     this.vehicleService.create(this.vehicle).subscribe(
       x => console.log(x));
+  }
+
+  private setVehicle(v: Vehicle) {
+    this.vehicle.id = v.id;
+    this.vehicle.makeId = v.make.id;
+    this.vehicle.modelId = v.model.id;
+    this.vehicle.isRegistered = v.isRegistered;
+    this.vehicle.contact = v.contact;
+    this.vehicle.features = _.pluck(v.features, 'id');
+  }
+
+  private populateModels() {
+    var selectedMake = this.makes.find(m => m.id == this.vehicle.makeId);
+    this.models = selectedMake ? selectedMake.models : [];
   }
 }
