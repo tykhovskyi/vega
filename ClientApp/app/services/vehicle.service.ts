@@ -6,7 +6,8 @@ import { SaveVehicle } from './../models/saveVehicle';
 
 @Injectable()
 export class VehicleService {
-  private originUrl = 'http://localhost:5000';
+  private readonly originUrl = 'http://localhost:5000';
+  private readonly vehiclesEndpoint = '/api/vehicles';
 
   constructor(private http: Http) { }
 
@@ -21,27 +22,38 @@ export class VehicleService {
   }
   
   create(vehicle) {
-    return this.http.post(this.originUrl + '/api/vehicles', vehicle)
+    return this.http.post(this.originUrl + this.vehiclesEndpoint, vehicle)
       .map(res => res.json());
   }
 
   getVehicle(id) {
-    return this.http.get(this.originUrl + '/api/vehicles/' + id)
+    return this.http.get(this.originUrl + this.vehiclesEndpoint + '/' + id)
       .map(res => res.json());
   }
 
   update(vehicle: SaveVehicle) {
-    return this.http.put(this.originUrl + '/api/vehicles/' + vehicle.id, vehicle)
+    return this.http.put(this.originUrl + this.vehiclesEndpoint + '/' + vehicle.id, vehicle)
       .map(res => res.json());
   }
 
   delete(id) {
-    return this.http.delete(this.originUrl + '/api/vehicles/' + id)
+    return this.http.delete(this.originUrl + this.vehiclesEndpoint + '/' + id)
       .map(res => res.json());
   }
 
-  getVehicles() {
-    return this.http.get(this.originUrl + '/api/vehicles')
+  getVehicles(filter) {
+    return this.http.get(this.originUrl + this.vehiclesEndpoint + '?' + this.toQueryString(filter))
       .map(res => res.json());
+  }
+
+  toQueryString(obj) {
+    var parts = [];
+    for (var property in obj) {
+      var value = obj[property];
+      if (value != null && value != undefined)
+        parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
+    }
+
+    return parts.join('&');
   }
 }
