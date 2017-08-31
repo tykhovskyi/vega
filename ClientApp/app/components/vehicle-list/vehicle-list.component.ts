@@ -13,10 +13,19 @@ export class VehicleListComponent implements OnInit {
   vehicles: Vehicle[];
   makes: KeyValuePair[];
   query: any = {};
+  columns;
 
   constructor(private vehicleService: VehicleService) { }
 
   ngOnInit() {
+    this.columns = [
+      { title: 'Id' },
+      { title: 'Make', key: 'make', isSortable: true },
+      { title: 'Model', key: 'model', isSortable: true },
+      { title: 'Contact Name', key: 'contactName', isSortable: true },
+      { }
+    ];
+
     this.vehicleService.getMakes()
       .subscribe(makes => this.makes = makes);
 
