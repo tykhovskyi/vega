@@ -12,7 +12,9 @@ import { KeyValuePair } from '../../models/keyValuePair';
 export class VehicleListComponent implements OnInit {
   vehicles: Vehicle[];
   makes: KeyValuePair[];
-  query: any = {};
+  query: any = {
+    pageSize: 3
+  };
   columns;
 
   constructor(private vehicleService: VehicleService) { }
@@ -49,6 +51,11 @@ export class VehicleListComponent implements OnInit {
       this.query.isSortAscending = true;
     }
 
+    this.populateVehicles();
+  }
+
+  onPageChange(page) {
+    this.query.page = page;
     this.populateVehicles();
   }
 
