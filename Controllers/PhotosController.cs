@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +15,9 @@ namespace vega.Controllers
     [Route("/api/vehicles/{vehicleId}/photos")]
     public class PhotosController : Controller
     {
+        private readonly int MAX_BYTES = 10 * 1024 * 1024;
+        private readonly string[] ACCEPTED_FILE_TYPES = new [] { ".jpg", ".jpeg", ".png" };
+
         private readonly IHostingEnvironment host;
         private readonly IVehicleRepository repository;
         private readonly IUnitOfWork unitOfWork;
@@ -32,8 +36,13 @@ namespace vega.Controllers
         public async Task<IActionResult> Upload(int vehicleId, IFormFile file)
         {
             var vehicle = await repository.GetVehicle(vehicleId, includeRelated: false);
-            if (vehicle == null)
-                return NotFound();
+            if (vehicle == null) return NotFound();
+
+            if (file == null) return BadRequest("Null file");
+            if (file.Length == 0) return BadRequest("Empty file");
+            if (file.Length > MAX_BYTES) return BadRequest("Max file size exceeded");
+            if (!ACCEPTED_FILE_TYPES.Any(e => e == Path.GetExtension(file.FileName)))
+                return BadRequest("Invallid file type");
 
             var uploadsFolderPath = Path.Combine(host.WebRootPath, "uploads");
             if (!Directory.Exists(uploadsFolderPath))
