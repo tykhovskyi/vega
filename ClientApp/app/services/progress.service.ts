@@ -4,10 +4,20 @@ import { Subject } from "rxjs/Subject";
 
 @Injectable()
 export class ProgressService {
-  uploadProgress: Subject<any> = new Subject();
-  downloadProgress: Subject<any> = new Subject();
+  private uploadProgress: Subject<any> = new Subject();
 
-  constructor() { }
+  startTracking() {
+    this.uploadProgress = new Subject();
+    return this.uploadProgress;
+  }
+
+  notify(progress) {
+    this.uploadProgress.next(progress);
+  }
+
+  endTracking() {
+    this.uploadProgress.complete();
+  }
 }
 
 @Injectable()
@@ -21,13 +31,11 @@ export class BrowserXhrWithProgress extends BrowserXhr {
     var xhr = super.build();
 
     xhr.upload.onprogress = (event) => {
-      this.service.uploadProgress
-        .next(this.createProgress(event))
+      this.service.notify(this.createProgress(event))
     };
-    xhr.onprogress = (event) => {
-      this.service.downloadProgress
-        .next(this.createProgress(event))
-    };
+    xhr.upload.onloadend = () => {
+      this.service.endTracking();
+    }
 
     return xhr;
   }
