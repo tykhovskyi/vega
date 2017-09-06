@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -65,6 +66,13 @@ namespace WebApplicationBasic
             }
 
             app.UseStaticFiles();
+            
+            app.UseJwtBearerAuthentication(
+                new JwtBearerOptions
+                {
+                    Audience = "https://api.vega.com",
+                    Authority = Environment.GetEnvironmentVariable("JwtBearerAuthority")
+                });
 
             app.UseMvc(routes =>
             {
