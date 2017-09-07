@@ -6,6 +6,7 @@ import { BrowserXhr, HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { ToastyModule } from 'ng2-toasty';
 
+import { AuthService } from './services/auth.service';
 import { VehicleService } from './services/vehicle.service';
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
@@ -54,6 +55,7 @@ Raven.config('https://145a32344615426eb732243dd9830b72@sentry.io/186959').instal
   providers: [
     { provide: ErrorHandler, useClass: AppErrorHandler },
     { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
+    AuthService,
     VehicleService,
     PhotoService,
     ProgressService

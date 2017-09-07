@@ -9,6 +9,9 @@
     "lib": [ "es6", "dom" ],
     "types": [ "node" ]
   },
+  "rules": {
+    "quotemark": [true, "single"]
+  },
   "exclude": [ "bin", "node_modules" ],
   "atom": { "rewriteTsconfig": false }
 }
