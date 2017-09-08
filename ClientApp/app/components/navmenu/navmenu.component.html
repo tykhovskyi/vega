@@ -12,6 +12,16 @@
         <div class='clearfix'></div>
         <div class='navbar-collapse collapse'>
             <ul class='nav navbar-nav'>
+                <li [routerLinkActive]="['link-active']">
+                    <a (click)="auth.login()" *ngIf="!auth.isAuthenticated(); else logout">
+                        <span class='glyphicon glyphicon-user'></span> Login
+                    </a>
+                    <ng-template #logout>
+                        <a (click)="auth.logout()">
+                            <span class='glyphicon glyphicon-user'></span> Logout
+                        </a>
+                    </ng-template>
+                </li>
                 <li [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{exact: true}">
                     <a [routerLink]="['/vehicles']">
                         <span class='glyphicon glyphicon-home'></span> Vehicles
