@@ -7,10 +7,20 @@ import Auth0Lock from 'auth0-lock';
 export class AuthService {
   private readonly tokenName = 'token';
 
-  lock = new Auth0Lock(
-    'kMUWBQo5g6aqWWrVIIU65Yi6HFCZuyfl',
-    'tykhovskyi.eu.auth0.com'
-  );
+  lock = new Auth0Lock('uqcMH7xMCM5tDF6Mu13lItqAtn8TwZIH', 'tykhovskyi.eu.auth0.com', {
+    auth: {
+      grant_types: [
+        /* add your other required grants here or the grants that the client already has */,
+        "password",
+        "http://auth0.com/oauth/grant-type/password-realm"
+    ],
+      redirectUrl: 'https://YOUR_APP/callback',
+      responseType: 'code',
+      params: {
+        scope: 'openid email' // Learn about scopes: https://auth0.com/docs/scopes
+      }
+    }
+  });
 
   constructor() {
     this.lock.on("authenticated", (authResult) => {
