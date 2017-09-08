@@ -1,44 +1,62 @@
 import { Injectable } from '@angular/core';
-import { tokenNotExpired } from 'angular2-jwt';
+import { Router } from '@angular/router';
 
-import Auth0Lock from 'auth0-lock';
+import 'rxjs/add/operator/filter';
+import * as auth0 from 'auth0-js';
 
 @Injectable()
 export class AuthService {
-  private readonly tokenName = 'token';
 
-  lock = new Auth0Lock('uqcMH7xMCM5tDF6Mu13lItqAtn8TwZIH', 'tykhovskyi.eu.auth0.com', {
-    auth: {
-      grant_types: [
-        /* add your other required grants here or the grants that the client already has */,
-        "password",
-        "http://auth0.com/oauth/grant-type/password-realm"
-    ],
-      redirectUrl: 'https://YOUR_APP/callback',
-      responseType: 'code',
-      params: {
-        scope: 'openid email' // Learn about scopes: https://auth0.com/docs/scopes
-      }
-    }
+  auth0 = new auth0.WebAuth({
+    clientID: 'uqcMH7xMCM5tDF6Mu13lItqAtn8TwZIH',
+    domain: 'tykhovskyi.eu.auth0.com',
+    responseType: 'token id_token',
+    audience: 'https://tykhovskyi.eu.auth0.com/userinfo',
+    redirectUri: 'http://localhost:5000/callback',      
+    scope: 'openid'
   });
 
-  constructor() {
-    this.lock.on("authenticated", (authResult) => {
-      console.log('authResult', authResult);
-      localStorage.setItem(this.tokenName, authResult.idToken);
+  constructor(public router: Router) {}
+
+  public login(): void {
+    this.auth0.authorize();
+  }
+  
+  public handleAuthentication(): void {
+    this.auth0.parseHash((err, authResult) => {
+      if (authResult && authResult.accessToken && authResult.idToken) {
+        window.location.hash = '';
+        this.setSession(authResult);
+        this.router.navigate(['/home']);
+      } else if (err) {
+        this.router.navigate(['/home']);
+        console.log(err);
+      }
     });
   }
 
-  login() {
-    this.lock.show();
+  private setSession(authResult): void {
+    // Set the time that the access token will expire at
+    const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+    localStorage.setItem('access_token', authResult.accessToken);
+    localStorage.setItem('id_token', authResult.idToken);
+    localStorage.setItem('expires_at', expiresAt);
   }
 
-  authenticated() {
-    return tokenNotExpired(this.tokenName);
+  public logout(): void {
+    // Remove tokens and expiry time from localStorage
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('id_token');
+    localStorage.removeItem('expires_at');
+    // Go back to the home route
+    this.router.navigate(['/']);
   }
 
-  logout() {
-    localStorage.removeItem(this.tokenName);
+  public isAuthenticated(): boolean {
+    // Check whether the current time is past the
+    // access token's expiry time
+    const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+    return new Date().getTime() < expiresAt;
   }
 
 }

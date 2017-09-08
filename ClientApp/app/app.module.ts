@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { ToastyModule } from 'ng2-toasty';
 
 import { AuthService } from './services/auth.service';
+import { CallbackComponent } from './components/shared/callback.component';
 import { VehicleService } from './services/vehicle.service';
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
@@ -33,7 +34,8 @@ Raven.config('https://145a32344615426eb732243dd9830b72@sentry.io/186959').instal
     VehicleFormComponent,
     VehicleListComponent,
     PaginationComponent,
-    VehicleViewComponent
+    VehicleViewComponent,
+    CallbackComponent
   ],
   imports: [
     CommonModule,
@@ -47,6 +49,7 @@ Raven.config('https://145a32344615426eb732243dd9830b72@sentry.io/186959').instal
       { path: 'vehicles/:id', component: VehicleViewComponent },
       { path: 'vehicles', component: VehicleListComponent },
       { path: 'home', component: HomeComponent },
+      { path: 'callback', component: CallbackComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: '**', redirectTo: 'home' }
