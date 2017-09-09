@@ -6,6 +6,7 @@ import * as auth0 from 'auth0-js';
 
 @Injectable()
 export class AuthService {
+  profile: any;
 
   auth0 = new auth0.WebAuth({
     clientID: 'uqcMH7xMCM5tDF6Mu13lItqAtn8TwZIH',
@@ -16,7 +17,9 @@ export class AuthService {
     scope: 'openid'
   });
 
-  constructor(public router: Router) {}
+  constructor(public router: Router) {
+    this.profile = JSON.parse(localStorage.getItem('profile'));
+  }
 
   public login(): void {
     this.auth0.authorize();
@@ -35,17 +38,14 @@ export class AuthService {
     });
   }
 
-  private setSession(authResult): void {
-    // Set the time that the access token will expire at
-    const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-    localStorage.setItem('token', authResult.accessToken);
-    localStorage.setItem('expires_at', expiresAt);
-  }
-
   public logout(): void {
     // Remove tokens and expiry time from localStorage
     localStorage.removeItem('token');
     localStorage.removeItem('expires_at');
+    localStorage.removeItem('profile');
+
+    this.profile = null;
+
     // Go back to the home route
     this.router.navigate(['/vehicles']);
   }
@@ -55,6 +55,22 @@ export class AuthService {
     // access token's expiry time
     const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
     return new Date().getTime() < expiresAt;
+  }
+
+
+  private setSession(authResult): void {
+    // Set the time that the access token will expire at
+    const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+    localStorage.setItem('token', authResult.accessToken);
+    localStorage.setItem('expires_at', expiresAt);
+
+    this.auth0.client.userInfo(authResult.accessToken, (err, profile) => {
+      if (err)
+        throw err;
+
+      localStorage.setItem('profile', JSON.stringify(profile));
+      this.profile = profile;
+    });
   }
 
 }
