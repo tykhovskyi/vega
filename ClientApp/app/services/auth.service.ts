@@ -20,14 +20,8 @@ export class AuthService {
   });
 
   constructor(public router: Router) {
-    this.profile = JSON.parse(localStorage.getItem('profile'));
-
-    const token = localStorage.getItem('token');
-    if (token) {
-      const jwtHelper = new JwtHelper();
-      const decodedToken = jwtHelper.decodeToken(token);
-      this.roles = decodedToken['https://vega.com/roles'];
-    }
+    
+    this.readUserFromLocalStorage();
   }
 
   public isInRole(roleName: string): boolean {
@@ -78,18 +72,26 @@ export class AuthService {
     localStorage.setItem('token', authResult.accessToken);
     localStorage.setItem('expires_at', expiresAt);
 
-    const jwtHelper = new JwtHelper();
-    const decodedToken = jwtHelper.decodeToken(authResult.accessToken);
-    this.roles = decodedToken['https://vega.com/roles'];
-
     this.auth0.client.userInfo(authResult.accessToken, (err, profile) => {
       if (err)
         throw err;
 
       console.log(profile);
       localStorage.setItem('profile', JSON.stringify(profile));
-      this.profile = profile;
+      
+      this.readUserFromLocalStorage();
     });
+  }
+
+  private readUserFromLocalStorage() {
+    this.profile = JSON.parse(localStorage.getItem('profile'));
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      const jwtHelper = new JwtHelper();
+      const decodedToken = jwtHelper.decodeToken(token);
+      this.roles = decodedToken['https://vega.com/roles'];
+    }
   }
 
 }
