@@ -68,6 +68,7 @@ export class AuthService {
       if (err)
         throw err;
 
+      console.log(profile);
       localStorage.setItem('profile', JSON.stringify(profile));
       this.profile = profile;
     });
