@@ -21,6 +21,7 @@ import { PaginationComponent } from './components/shared/pagination.component';
 import { VehicleViewComponent } from './components/vehicle-view/vehicle-view.component';
 import { PhotoService } from './services/photo.service';
 import { BrowserXhrWithProgress, ProgressService } from './services/progress.service';
+import { AdminComponent } from './components/admin/admin.component';
 
 Raven.config('https://145a32344615426eb732243dd9830b72@sentry.io/186959').install();
 
@@ -35,7 +36,8 @@ Raven.config('https://145a32344615426eb732243dd9830b72@sentry.io/186959').instal
     VehicleListComponent,
     PaginationComponent,
     VehicleViewComponent,
-    CallbackComponent
+    CallbackComponent,
+    AdminComponent
   ],
   imports: [
     CommonModule,
@@ -49,6 +51,7 @@ Raven.config('https://145a32344615426eb732243dd9830b72@sentry.io/186959').instal
       { path: 'vehicles/:id', component: VehicleViewComponent },
       { path: 'vehicles', component: VehicleListComponent },
       { path: 'home', component: HomeComponent },
+      { path: 'admin', component: AdminComponent },
       { path: 'callback', component: CallbackComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },

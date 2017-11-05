@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { JwtHelper } from 'angular2-jwt';
 
 import 'rxjs/add/operator/filter';
 import * as auth0 from 'auth0-js';
 
 @Injectable()
 export class AuthService {
+  private roles: string[] = [];
   profile: any;
 
   auth0 = new auth0.WebAuth({
@@ -19,6 +21,17 @@ export class AuthService {
 
   constructor(public router: Router) {
     this.profile = JSON.parse(localStorage.getItem('profile'));
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      const jwtHelper = new JwtHelper();
+      const decodedToken = jwtHelper.decodeToken(token);
+      this.roles = decodedToken['https://vega.com/roles'];
+    }
+  }
+
+  public isInRole(roleName: string): boolean {
+    return this.roles.indexOf(roleName) > -1;
   }
 
   public login(): void {
@@ -45,6 +58,7 @@ export class AuthService {
     localStorage.removeItem('profile');
 
     this.profile = null;
+    this.roles = [];
 
     // Go back to the home route
     this.router.navigate(['/vehicles']);
@@ -63,6 +77,10 @@ export class AuthService {
     const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
     localStorage.setItem('token', authResult.accessToken);
     localStorage.setItem('expires_at', expiresAt);
+
+    const jwtHelper = new JwtHelper();
+    const decodedToken = jwtHelper.decodeToken(authResult.accessToken);
+    this.roles = decodedToken['https://vega.com/roles'];
 
     this.auth0.client.userInfo(authResult.accessToken, (err, profile) => {
       if (err)
