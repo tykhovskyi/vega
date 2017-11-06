@@ -1,15 +1,19 @@
 import { Component, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
+import { BrowserXhr } from '@angular/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
 import { VehicleService } from '../../services/vehicle.service';
 import { PhotoService } from '../../services/photo.service';
-import { ProgressService } from '../../services/progress.service';
+import { BrowserXhrWithProgress, ProgressService } from '../../services/progress.service';
 
 @Component({
   selector: 'ng-vehicle-view',
   templateUrl: './vehicle-view.component.html',
-  styles: []
+  providers: [
+    { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
+    ProgressService
+  ]
 })
 export class VehicleViewComponent implements OnInit {
   private readonly VEHICLES_URI = '/vehicles';

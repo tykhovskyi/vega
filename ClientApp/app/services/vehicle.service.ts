@@ -1,6 +1,7 @@
+import { AuthHttp } from 'angular2-jwt';
 import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/map';
 
 import { SaveVehicle } from './../models/saveVehicle';
 
@@ -9,7 +10,7 @@ export class VehicleService {
   private readonly originUrl = 'http://localhost:5000';
   private readonly vehiclesEndpoint = '/api/vehicles';
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private authHttp: AuthHttp) { }
 
   getMakes() {
     return this.http.get(this.originUrl + '/api/makes')
@@ -22,22 +23,22 @@ export class VehicleService {
   }
   
   create(vehicle) {
-    return this.http.post(this.originUrl + this.vehiclesEndpoint, vehicle)
+    return this.authHttp.post(this.originUrl + this.vehiclesEndpoint, vehicle)
+      .map(res => res.json());
+  }
+
+  update(vehicle: SaveVehicle) {
+    return this.authHttp.put(this.originUrl + this.vehiclesEndpoint + '/' + vehicle.id, vehicle)
+      .map(res => res.json());
+  }
+
+  delete(id) {
+    return this.authHttp.delete(this.originUrl + this.vehiclesEndpoint + '/' + id)
       .map(res => res.json());
   }
 
   getVehicle(id) {
     return this.http.get(this.originUrl + this.vehiclesEndpoint + '/' + id)
-      .map(res => res.json());
-  }
-
-  update(vehicle: SaveVehicle) {
-    return this.http.put(this.originUrl + this.vehiclesEndpoint + '/' + vehicle.id, vehicle)
-      .map(res => res.json());
-  }
-
-  delete(id) {
-    return this.http.delete(this.originUrl + this.vehiclesEndpoint + '/' + id)
       .map(res => res.json());
   }
 

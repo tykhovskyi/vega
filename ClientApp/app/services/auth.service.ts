@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { JwtHelper } from 'angular2-jwt';
 
 import 'rxjs/add/operator/filter';
 import * as auth0 from 'auth0-js';
@@ -35,7 +34,7 @@ export class AuthService {
   
   public handleAuthentication(): void {
     this.auth0.parseHash((err, authResult) => {
-      console.log(authResult)
+      // console.log(authResult)
       if (authResult && authResult.accessToken) {
         window.location.hash = '';
         this.setSession(authResult);
@@ -76,7 +75,7 @@ export class AuthService {
       if (err)
         throw err;
 
-      console.log(profile);
+      // console.log(profile);
       localStorage.setItem('profile', JSON.stringify(profile));
       
       this.readUserFromLocalStorage();

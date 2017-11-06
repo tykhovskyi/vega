@@ -1,8 +1,9 @@
+import { AUTH_PROVIDERS } from 'angular2-jwt';
 import * as Raven from 'raven-js';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BrowserXhr, HttpModule } from '@angular/http';
+import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { ToastyModule } from 'ng2-toasty';
 
@@ -20,7 +21,6 @@ import { VehicleListComponent } from './components/vehicle-list/vehicle-list.com
 import { PaginationComponent } from './components/shared/pagination.component';
 import { VehicleViewComponent } from './components/vehicle-view/vehicle-view.component';
 import { PhotoService } from './services/photo.service';
-import { BrowserXhrWithProgress, ProgressService } from './services/progress.service';
 import { AdminComponent } from './components/admin/admin.component';
 import { AuthGuard } from './services/auth-guard.service';
 import { AdminAuthGuard } from './services/admin-auth-guard.service';
@@ -62,13 +62,12 @@ Raven.config('https://145a32344615426eb732243dd9830b72@sentry.io/186959').instal
   ],
   providers: [
     { provide: ErrorHandler, useClass: AppErrorHandler },
-    { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
+    AUTH_PROVIDERS,
     AuthService,
     AuthGuard,
     AdminAuthGuard,
     VehicleService,
-    PhotoService,
-    ProgressService
+    PhotoService
   ]
 })
 export class AppModuleShared {
