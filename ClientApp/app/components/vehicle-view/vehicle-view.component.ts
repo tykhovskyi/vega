@@ -1,3 +1,4 @@
+import { AuthService } from '../../services/auth.service';
 import { Component, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { BrowserXhr } from '@angular/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,6 +26,7 @@ export class VehicleViewComponent implements OnInit {
   progress: any;
 
   constructor(
+    private auth: AuthService,
     private zone: NgZone,
     private route: ActivatedRoute,
     private router: Router,

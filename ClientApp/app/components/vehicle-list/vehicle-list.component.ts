@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+import { AuthService } from '../../services/auth.service';
 import { Vehicle } from '../../models/vehicle';
 import { VehicleService } from './../../services/vehicle.service';
 import { KeyValuePair } from '../../models/keyValuePair';
@@ -19,7 +20,7 @@ export class VehicleListComponent implements OnInit {
   };
   columns;
 
-  constructor(private vehicleService: VehicleService) { }
+  constructor(private vehicleService: VehicleService, private auth: AuthService) { }
 
   ngOnInit() {
     this.columns = [
