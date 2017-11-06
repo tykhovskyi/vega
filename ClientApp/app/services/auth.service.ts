@@ -7,7 +7,6 @@ import * as auth0 from 'auth0-js';
 
 @Injectable()
 export class AuthService {
-  private roles: string[] = [];
   profile: any;
 
   auth0 = new auth0.WebAuth({
@@ -19,13 +18,15 @@ export class AuthService {
     scope: 'openid'
   });
 
-  constructor(public router: Router) {
-    
+  constructor(public router: Router) {    
     this.readUserFromLocalStorage();
   }
 
   public isInRole(roleName: string): boolean {
-    return this.roles.indexOf(roleName) > -1;
+    if (this.profile && this.profile.roles)
+      return this.profile.roles.indexOf(roleName) > -1;
+
+    return false;
   }
 
   public login(): void {
@@ -52,7 +53,6 @@ export class AuthService {
     localStorage.removeItem('profile');
 
     this.profile = null;
-    this.roles = [];
 
     // Go back to the home route
     this.router.navigate(['/vehicles']);
@@ -85,13 +85,6 @@ export class AuthService {
 
   private readUserFromLocalStorage() {
     this.profile = JSON.parse(localStorage.getItem('profile'));
-
-    const token = localStorage.getItem('token');
-    if (token) {
-      const jwtHelper = new JwtHelper();
-      const decodedToken = jwtHelper.decodeToken(token);
-      this.roles = decodedToken['https://vega.com/roles'];
-    }
   }
 
 }

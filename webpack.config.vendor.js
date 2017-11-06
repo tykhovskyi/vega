@@ -25,7 +25,6 @@ module.exports = (env) => {
                 '@angular/platform-browser',
                 '@angular/platform-browser-dynamic',
                 '@angular/router',
-                'angular2-jwt',
                 'auth0-js',
                 'bootstrap',
                 'bootstrap/dist/css/bootstrap.css',
