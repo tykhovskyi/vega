@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using vega.Core;
 using vega.Core.Models;
 using vega.Persistence;
+using vega.Controllers;
 
 namespace WebApplicationBasic
 {
@@ -45,6 +46,10 @@ namespace WebApplicationBasic
             
             services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
             services.AddAutoMapper();
+
+            services.AddAuthorization(options => {
+               options.AddPolicy(Policies.RequireAdminRole, policy => policy.RequireClaim("https://vega.com/roles", "Admin")); 
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
