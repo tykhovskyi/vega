@@ -22,6 +22,8 @@ import { VehicleViewComponent } from './components/vehicle-view/vehicle-view.com
 import { PhotoService } from './services/photo.service';
 import { BrowserXhrWithProgress, ProgressService } from './services/progress.service';
 import { AdminComponent } from './components/admin/admin.component';
+import { AuthGuard } from './services/auth-guard.service';
+import { AdminAuthGuard } from './services/admin-auth-guard.service';
 
 Raven.config('https://145a32344615426eb732243dd9830b72@sentry.io/186959').install();
 
@@ -51,7 +53,7 @@ Raven.config('https://145a32344615426eb732243dd9830b72@sentry.io/186959').instal
       { path: 'vehicles/:id', component: VehicleViewComponent },
       { path: 'vehicles', component: VehicleListComponent },
       { path: 'home', component: HomeComponent },
-      { path: 'admin', component: AdminComponent },
+      { path: 'admin', component: AdminComponent, canActivate: [ AdminAuthGuard ] },
       { path: 'callback', component: CallbackComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
@@ -62,6 +64,8 @@ Raven.config('https://145a32344615426eb732243dd9830b72@sentry.io/186959').instal
     { provide: ErrorHandler, useClass: AppErrorHandler },
     { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
     AuthService,
+    AuthGuard,
+    AdminAuthGuard,
     VehicleService,
     PhotoService,
     ProgressService
