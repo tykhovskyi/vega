@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { ToastyModule } from 'ng2-toasty';
+import { ChartModule } from 'angular2-chartjs';
 
 import { AuthService } from './services/auth.service';
 import { CallbackComponent } from './components/shared/callback.component';
@@ -46,6 +47,7 @@ Raven.config('https://145a32344615426eb732243dd9830b72@sentry.io/186959').instal
     HttpModule,
     FormsModule,
     ToastyModule.forRoot(),
+    ChartModule,
     RouterModule.forRoot([
       { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
       { path: 'vehicles/new', component: VehicleFormComponent, canActivate: [ AuthGuard ] },
